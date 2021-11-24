@@ -1,0 +1,5 @@
+.env
+/venv
+/static
+/ml
+/__pycache__
