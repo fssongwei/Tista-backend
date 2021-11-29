@@ -8,7 +8,7 @@ import string
 from os.path import join, dirname, realpath
 import pathlib
 from flask import send_from_directory
-from ml import readFile
+# from ml import readFile
 import math
 from bson.json_util import dumps
 import json
@@ -81,7 +81,8 @@ def upload():
     filePath = "/static/uploads/" + filename;
 
     # run machine learning model
-    riskLevel = readFile("." + filePath)
+    # riskLevel = readFile("." + filePath)
+    riskLevel = 3
     print(riskLevel)
 
     # validate claim data
