@@ -1,5 +1,7 @@
 import pandas as pd
+from pymongo import database
 import shap
+import numpy as np
 from joblib import dump, load
 pca = load('./Trained_Models/PCA.joblib')
 autenc = load('./Trained_Models/AutoEncoder.joblib')
@@ -10,35 +12,17 @@ def prediction(record):
     i = isofor.predict(record)
     a = autenc.predict(record)   
     sum = p+i+a
-    return sum;
+    return sum[0];
 
-def readFile(filePath):
-    f = open(filePath)
-    lines = f.readlines()
+def read_txt_file(file_path):
+    with open(file_path,'r') as f:
+        content = [item.strip() for item in f.readlines()]
+        features = []
+        for line in content:
+            parts = line.split('\t')
+            features.append(parts)
+        data = pd.DataFrame(features, columns=['claim_id','provider_type', 'patient_id', 'billable_start', 'billable_end', 'bill_time_difference', 'provider_name','insurance_company', 'num_sequence', 'total_payment', 'encounter_des', 'net_value', 'service', 'total_visits', 'claims_per_provider'])
+        return data.applymap(hash)
 
-    def convertLine(line):
-        data = line.replace('\n', '').split(':')
-        feature = data[0].strip()
-        value = data[1].strip()
-        if value.replace('.','',1).isdigit(): value = int(value)
-        return {feature: value}
 
-    lines = list(map(convertLine,lines))
-    lines.append({"Unnamed: 0": 12412});
-    lines.append({"Unnamed: 0.1": 12412});
 
-    data = {}
-    for line in lines: data.update(line)
-    data = pd.DataFrame([data])
-
-    # data = pd.read_csv(filePath)
-
-    def encoding(df):
-        df = df.where(pd.notnull(df), None)
-        X =  df.applymap(hash)
-        return X
-    data = encoding(data).iloc[-1]
-    return int(prediction([data])[0])
-
-# res = readFile("./static/uploads/mid_risk.csv")
-# print(res)
