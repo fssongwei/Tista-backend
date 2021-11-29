@@ -13,7 +13,7 @@ from bson.json_util import dumps
 from factory import create_app
 from ml import prediction
 from ml import read_txt_file
-
+import random
 
 
 app = create_app()
@@ -21,7 +21,6 @@ app = create_app()
 
 # link database
 from flask_pymongo import PyMongo
-app.config["MONGO_URI"] = "mongodb+srv://tista:cornell2021@cluster0.9dx7j.mongodb.net/test?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 claimsCollections = mongo.db.Claims
 
@@ -141,15 +140,14 @@ def upload():
 
 
     # run machine learning model
-    riskLevel = int(prediction(read_txt_file(filePath)))
-    print(riskLevel)
+    # riskLevel = int(prediction(read_txt_file(filePath)))
+    riskLevel = random.randint(0,3)
 
     # validate claim data
     name = claim["name"] or "John Doe"
     patientId = claim["patientId"] or getNextId("Patients")
     comment = claim["comment"]
-    claimId = '0'  #Hardcoding
-    # claimId = getNextId("Claims")
+    claimId = getNextId("Claims")
 
     # insert claim into database
     claimObjId = claimsCollections.insert({"name": name, "patientId": patientId, "comment": comment, "claimId": claimId, "filePath": filePath, "riskLevel": riskLevel});
