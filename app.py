@@ -8,7 +8,7 @@ import string
 from os.path import join, dirname, realpath
 import pathlib
 from flask import send_from_directory
-# from ml import readFile
+from ml import getRiskLevel
 import math
 from bson.json_util import dumps
 import json
@@ -22,7 +22,6 @@ app.config['UPLOAD_FOLDER'] = join(dirname(realpath(__file__)), './static/upload
 # link database
 from flask_pymongo import PyMongo
 app.config["MONGO_URI"] = os.environ.get("MONGO_URL")
-print(app.config["MONGO_URI"])
 mongo = PyMongo(app)
 claimsCollections = mongo.db.Claims
 
@@ -81,9 +80,7 @@ def upload():
     filePath = "/static/uploads/" + filename;
 
     # run machine learning model
-    # riskLevel = readFile("." + filePath)
-    riskLevel = 3
-    print(riskLevel)
+    riskLevel = getRiskLevel("." + filePath)
 
     # validate claim data
     name = claim["name"] or "John Doe"

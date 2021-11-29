@@ -4,6 +4,7 @@
 # pca = load('./Trained_Models/PCA.joblib')
 # autenc = load('./Trained_Models/AutoEncoder.joblib')
 # isofor = load('./Trained_Models/IsolatedForest.joblib')
+import random
 
 # def prediction(record):
 #     p = pca.predict(record)
@@ -42,3 +43,7 @@
 
 # # res = readFile("./static/uploads/mid_risk.csv")
 # # print(res)
+
+def getRiskLevel(path):
+    # TODO: ADD Prediction Model
+    return random.randint(0, 3)

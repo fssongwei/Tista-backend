@@ -1,2 +1,0 @@
-,Unnamed: 0,claim_type,claim_id,last_update_date,provider_type,patient_id,billable_start,billable_end,bill_time_difference,provider_id,provider_name,priority,facility_location_id,facility_location_description,insurance_company,num_sequence,total_payment,encounter_des,net_value,service,total_visits
-401,401,Claim,1175079,2020-05-29T03:10:54.032+00:00,professional,1175071,0,0,0,Practitioner/1175080,None,normal,Location/1175074,None,No Insurance,1,251,None,None,None,3
