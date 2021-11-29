@@ -1,0 +1,2 @@
+,Unnamed: 0,claim_type,claim_id,last_update_date,provider_type,patient_id,billable_start,billable_end,bill_time_difference,provider_id,provider_name,priority,facility_location_id,facility_location_description,insurance_company,num_sequence,total_payment,encounter_des,net_value,service,total_visits
+0,0,Claim,1318172,2020-07-03T18:48:09.061+00:00,institutional,1316471,1480936219,1486303819,5367600,Organization/368,None,normal,None,None,No Insurance,0,None,None,None,None,2

@@ -1,0 +1,2 @@
+,Unnamed: 0,claim_type,claim_id,last_update_date,provider_type,patient_id,billable_start,billable_end,bill_time_difference,provider_id,provider_name,priority,facility_location_id,facility_location_description,insurance_company,num_sequence,total_payment,encounter_des,net_value,service,total_visits
+1772,1772,Claim,1185622,2020-06-05T17:11:59.657+00:00,pharmacy,1185396,1463815361,1463825261,9900,Organization/1185397,MORTON HOSPITAL,normal,None,None,Medicare,1,30.68,Emergency room admission (procedure),None,None,22
