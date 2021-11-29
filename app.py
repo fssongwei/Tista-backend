@@ -22,6 +22,7 @@ app.config['UPLOAD_FOLDER'] = join(dirname(realpath(__file__)), './static/upload
 # link database
 from flask_pymongo import PyMongo
 app.config["MONGO_URI"] = os.environ.get("MONGO_URL")
+print(app.config["MONGO_URI"])
 mongo = PyMongo(app)
 claimsCollections = mongo.db.Claims
 
@@ -97,3 +98,8 @@ def upload():
     )
     return response, 200
 
+app = Flask(__name__)
+if __name__ == '__main__':
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='127.0.0.1', port=port)
