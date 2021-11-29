@@ -1,5 +1,5 @@
 .env
 /venv
-/static
+# /static
 /ml
 /__pycache__
