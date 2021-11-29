@@ -1,0 +1,20 @@
+claim_type: Claim
+claim_id: 1175079
+last_update_date: 2020-05-29T03:10:54.032+00:00
+provider_type: professional
+patient_id: 1175071
+billable_start: 0
+billable_end: 0
+bill_time_difference: 0
+provider_id: Practitioner/1175080
+provider_name: None
+priority: normal
+facility_location_id: Location/1175074
+facility_location_description: None
+insurance_company: No Insurance
+num_sequence: 1
+total_payment: 251
+encounter_des: None
+net_value: None
+service: None
+total_visits: 3

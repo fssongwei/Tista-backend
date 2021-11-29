@@ -2,6 +2,9 @@ import os
 import random
 import string
 import json
+from os.path import join, dirname, realpath
+import pathlib
+from flask import send_from_directory
 import math
 import pathlib
 from flask import request
@@ -156,3 +159,8 @@ def upload():
         claimId=claimId
     )
     return response, 200
+
+if __name__ == '__main__':
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='127.0.0.1', port=port)
