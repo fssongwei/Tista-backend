@@ -140,8 +140,7 @@ def upload():
 
 
     # run machine learning model
-    # riskLevel = int(prediction(read_txt_file(filePath)))
-    riskLevel = random.randint(0,3)
+    riskLevel = int(prediction(read_txt_file(filePath)))
 
     # validate claim data
     name = claim["name"] or "John Doe"
