@@ -171,7 +171,7 @@ def upload():
 def getReport():
     
     queryClaimId = request.args.get('claimId')
-    myquery = { "claimId": queryClaimId}
+    myquery = { "claimId": int(queryClaimId)}
     mydoc = claimsCollections.find_one(myquery)
     mydoc = json.loads(dumps(mydoc))
   
@@ -185,14 +185,16 @@ def getReport():
     else:
         risk = "high"
 
-    with open(mydoc["filePath"],'r') as f:
-        content = [item.strip() for item in f.readlines()]
-        features = []
-        for line in content:
-            parts = line.split('\t')
-            features.append(parts)
+    features = []
+    fileExist = os.path.exists(mydoc["filePath"])
+    if fileExist:
+        with open(mydoc["filePath"],'r') as f:
+            content = [item.strip() for item in f.readlines()]
+            for line in content:
+                parts = line.split('\t')
+                features.append(parts)
 
-    table = {
+    res = {
         "reportId": mydoc["claimId"],
         "riskLevel": risk,
         "patientName": mydoc["name"],
@@ -200,14 +202,10 @@ def getReport():
         "reviewStatus": "Completed",        
         "claim": mydoc["filePath"],
 
-        "providerName": features[0][6],
-        "facilityLocation": features[0][7],
-        "netValue":features[0][11],
-        "billTimeDifference": features[0][5],
-    }
-
-    res = {
-        "tableData": table
+        "providerName": features[0][6] if fileExist else "Null",
+        "facilityLocation": features[0][7] if fileExist else "Null",
+        "netValue":features[0][11] if fileExist else "Null",
+        "billTimeDifference": features[0][5] if fileExist else "Null",
     }
 
     response = jsonify(res)
