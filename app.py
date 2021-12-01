@@ -2,15 +2,20 @@ import os
 import random
 import string
 import json
+from os.path import join, dirname, realpath
+import pathlib
+from dns import name
+from flask import send_from_directory
 import math
 import pathlib
 from flask import request
 from flask import jsonify
 from bson.json_util import dumps
+from pymongo.srv_resolver import maybe_decode
 from factory import create_app
 from ml import prediction
 from ml import read_txt_file
-
+import random
 
 
 app = create_app()
@@ -18,7 +23,6 @@ app = create_app()
 
 # link database
 from flask_pymongo import PyMongo
-app.config["MONGO_URI"] = "mongodb+srv://tista:cornell2021@cluster0.9dx7j.mongodb.net/test?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 claimsCollections = mongo.db.Claims
 
@@ -32,6 +36,7 @@ def getNextId(collectionName):
     return count
 
 
+# get ALL claims
 @app.route('/claims', methods=['GET'])
 def getClaims():
     search = request.args.get('search')
@@ -64,6 +69,7 @@ def getClaims():
     response = jsonify(res)
     return response, 200
 
+# get ALL patients
 @app.route('/patients', methods=['GET'])
 def getPatients():
     search = request.args.get('search')
@@ -97,6 +103,7 @@ def getPatients():
     return response, 200
 
 
+# delete claims based on claimId
 @app.route('/claims', methods=['DELETE'])
 def deleteClaims():
     #delete claims
@@ -110,6 +117,7 @@ def deleteClaims():
     return response, 200
 
 
+# delete patients based on name
 @app.route('/patients', methods=['DELETE'])
 def deletePatients():
     #delete patients
@@ -123,6 +131,7 @@ def deletePatients():
     return response, 200
 
 
+# upload claims
 @app.route('/upload', methods=['POST'])
 def upload():
     # save file
@@ -138,15 +147,14 @@ def upload():
 
 
     # run machine learning model
-    riskLevel = int(prediction(read_txt_file(filePath)))
-    print(riskLevel)
+    # riskLevel = int(prediction(read_txt_file(filePath)))
+    riskLevel = random.randint(0,3)
 
     # validate claim data
     name = claim["name"] or "John Doe"
     patientId = claim["patientId"] or getNextId("Patients")
     comment = claim["comment"]
-    claimId = '0'  #Hardcoding
-    # claimId = getNextId("Claims")
+    claimId = getNextId("Claims")
 
     # insert claim into database
     claimObjId = claimsCollections.insert({"name": name, "patientId": patientId, "comment": comment, "claimId": claimId, "filePath": filePath, "riskLevel": riskLevel});
@@ -156,3 +164,58 @@ def upload():
         claimId=claimId
     )
     return response, 200
+
+
+# get report
+@app.route('/claims/report', methods=['GET'])
+def getReport():
+    
+    queryClaimId = request.args.get('claimId')
+    myquery = { "claimId": queryClaimId}
+    mydoc = claimsCollections.find_one(myquery)
+    mydoc = json.loads(dumps(mydoc))
+  
+
+    if mydoc["riskLevel"] == '0':
+        risk = "unlikely"
+    elif mydoc["riskLevel"] == '1':
+        risk = "low"
+    elif mydoc["riskLevel"] == '2':
+        risk = "mid"
+    else:
+        risk = "high"
+
+    with open(mydoc["filePath"],'r') as f:
+        content = [item.strip() for item in f.readlines()]
+        features = []
+        for line in content:
+            parts = line.split('\t')
+            features.append(parts)
+
+    table = {
+        "reportId": mydoc["claimId"],
+        "riskLevel": risk,
+        "patientName": mydoc["name"],
+        "patientId": mydoc["patientId"],
+        "reviewStatus": "Completed",        
+        "claim": mydoc["filePath"],
+
+        "providerName": features[0][6],
+        "facilityLocation": features[0][7],
+        "netValue":features[0][11],
+        "billTimeDifference": features[0][5],
+    }
+
+    res = {
+        "tableData": table
+    }
+
+    response = jsonify(res)
+    return response, 200 
+
+
+if __name__ == '__main__':
+    # Bind to PORT if defined, otherwise default to 5000.
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='127.0.0.1', port=port)
+
