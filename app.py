@@ -167,7 +167,7 @@ def upload():
 
 
 # get report
-@app.route('/claims/report', methods=['GET'])
+@app.route('/report', methods=['GET'])
 def getReport():
     
     queryClaimId = request.args.get('claimId')
