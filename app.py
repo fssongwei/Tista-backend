@@ -176,14 +176,14 @@ def getReport():
     mydoc = json.loads(dumps(mydoc))
   
 
-    if mydoc["riskLevel"] == '0':
-        risk = "unlikely"
-    elif mydoc["riskLevel"] == '1':
-        risk = "low"
-    elif mydoc["riskLevel"] == '2':
-        risk = "mid"
-    else:
-        risk = "high"
+    # if mydoc["riskLevel"] == '0':
+    #     risk = "unlikely"
+    # elif mydoc["riskLevel"] == '1':
+    #     risk = "low"
+    # elif mydoc["riskLevel"] == '2':
+    #     risk = "mid"
+    # else:
+    #     risk = "high"
 
     features = []
     fileExist = os.path.exists(mydoc["filePath"])
@@ -196,11 +196,12 @@ def getReport():
 
     res = {
         "reportId": mydoc["claimId"],
-        "riskLevel": risk,
+        "riskLevel": mydoc["riskLevel"],
         "patientName": mydoc["name"],
         "patientId": mydoc["patientId"],
         "reviewStatus": "Completed",        
         "claim": mydoc["filePath"],
+        "comment": mydoc["comment"],
 
         "providerName": features[0][6] if fileExist else "Null",
         "facilityLocation": features[0][7] if fileExist else "Null",
